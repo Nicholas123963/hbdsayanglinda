@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Sayang!</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: pink;
+            font-family: Arial, sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+        h1 {
+            margin-top: 20vh;
+            font-size: 3rem;
+        }
+        .hearts {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            clip-path: polygon(50% 0%, 100% 35%, 75% 100%, 50% 75%, 25% 100%, 0% 35%);
+            animation: fall 4s linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100px); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        .button, .gift, .balloon, .letter {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        .button:hover, .gift:hover, .balloon:hover, .letter:hover {
+            background-color: darkred;
+        }
+        .popup, .gift-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 70px;
+            background: red;
+            border-radius: 50%;
+            animation: floatUp 5s ease-in-out infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-500px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Happy Birthday Sayangku! 🎉🎂</h1>
+    <p>Ciee Udah Tua, Semoga Rejekinya Banyak, Sayang Sama Aku, Cinta Sama Aku ❤️</p>
+    
+    <button class="letter" onclick="openLetter()">📜 Klik Surat</button>
+    <button class="gift" onclick="openGift()">🎁 Buka Kado</button>
+    <div class="balloon" onclick="popBalloon()"></div>
+    
+    <div class="popup" id="letterPopup">
+        <p>Sayangku,
+        <br>Selamat ulang tahun! 🎉
+        <br>Aku bersyukur punya kamu dalam hidupku.
+        <br>Semoga semua impianmu tercapai dan kita selalu bersama! ❤️</p>
+        <button onclick="closeLetter()">Tutup</button>
+    </div>
+    
+    <div class="gift-popup" id="giftPopup">
+        <p>🎉 Surprise! 🎉<br>Kado ini berisi banyak cinta dan kebahagiaan untukmu! 💖</p>
+        <button onclick="closeGift()">Tutup</button>
+    </div>
+    
+    <canvas class="fireworks"></canvas>
+    
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('hearts');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 300);
+        
+        function openLetter() {
+            document.getElementById('letterPopup').style.display = 'block';
+        }
+        function closeLetter() {
+            document.getElementById('letterPopup').style.display = 'none';
+        }
+        function openGift() {
+            document.getElementById('giftPopup').style.display = 'block';
+        }
+        function closeGift() {
+            document.getElementById('giftPopup').style.display = 'none';
+        }
+        function popBalloon() {
+            alert("🎈 Pop! Balonnya meletus! 🎈");
+        }
+        
+        // Fireworks effect
+        const canvas = document.querySelector('.fireworks');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = [];
+
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height / 2;
+            for (let i = 0; i < 30; i++) {
+                particles.push({
+                    x,
+                    y,
+                    size: Math.random() * 4 + 1,
+                    speedX: (Math.random() - 0.5) * 5,
+                    speedY: (Math.random() - 0.5) * 5,
+                    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                    life: 100
+                });
+            }
+        }
+
+        function animateFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.life--;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                if (p.life <= 0) particles.splice(index, 1);
+            });
+            requestAnimationFrame(animateFireworks);
+        }
+
+        setInterval(createFirework, 1000);
+        animateFireworks();
+    </script>
+</body>
+</html>
